@@ -2,6 +2,7 @@ package com.spring;
 
 import com.rpc.MyConfig;
 import com.rpc.bean.Employee;
+import com.rpc.bean.Student;
 import com.rpc.bean.User;
 import com.spring.ioc.KyApplicationContext;
 import com.spring.ioc.NoSuchBeanException;
@@ -25,6 +26,10 @@ public class ContextTest {
         System.out.println(employee);
         Employee employee1 = ioc.getBean("emp", Employee.class);
         System.out.println(employee1);
+        Student student = ioc.getBean("student", Student.class);
+        System.out.println(student);
+        Student student1 = ioc.getBean("student", Student.class);
+        System.out.println(student1);
 
     }
 

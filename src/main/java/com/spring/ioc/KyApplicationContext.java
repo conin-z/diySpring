@@ -4,12 +4,11 @@ import com.spring.ioc.marktypes.Component;
 import com.spring.ioc.marktypes.Service;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -24,7 +23,9 @@ public class KyApplicationContext {
     ConcurrentMap<String,BeanDefinition> definitions = new ConcurrentHashMap();
     Set<org.springframework.beans.factory.config.BeanPostProcessor> bppSet = new TreeSet<>();
 
-    Class<?>[] markTypes = new Class[]{Component.class,Service.class};
+    List<Class<? extends Annotation>> markTypes = new LinkedList(Arrays.asList(Component.class,Service.class));
+
+
 
 
     /**
@@ -37,6 +38,7 @@ public class KyApplicationContext {
         scan(configClz);
         //
         singletonBeansGenerator(definitions);
+        System.out.println("ioc is created");
 
 
     }
@@ -45,11 +47,12 @@ public class KyApplicationContext {
         for (Map.Entry<String,BeanDefinition> entry:definitions.entrySet()) {
             String key = entry.getKey();
             BeanDefinition info = entry.getValue();
-            if(!singleBeans.containsKey(key)&&"singleton".equalsIgnoreCase(info.getScope())){
+            if(!singleBeans.containsKey(key)&&"singleton".equalsIgnoreCase(info.getScope())&&(!info.getaClass().isAnnotationPresent(Lazy.class)||info.getaClass().getDeclaredAnnotation(Lazy.class).value()!=true)){
                 //create -- put into beanmap
                 Object instance = null;
                 try {
                     instance = createBean(key,info.getaClass());
+
 
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
@@ -112,6 +115,8 @@ public class KyApplicationContext {
         for (org.springframework.beans.factory.config.BeanPostProcessor bpp:bppSet){
             bean = (T)bpp.postProcessAfterInitialization(bean, name);
         }
+
+        System.out.println("instance named "+name+" is created");
 
         return bean;
     }

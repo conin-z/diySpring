@@ -49,12 +49,12 @@ public class User {
         this.emp = emp;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                ", emp=" + emp +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "name='" + name + '\'' +
+//                ", age=" + age +
+//                ", emp=" + emp +
+//                '}';
+//    }
 }
